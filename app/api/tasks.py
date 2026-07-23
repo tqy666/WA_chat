@@ -1,10 +1,10 @@
 # tasks.py
 import asyncio
-from app.api.celery_app import app  # 确保这里导入的是你配置好的 celery app 实例
+from app.api.celery_app import celery_app  # 确保这里导入的是你配置好的 celery app 实例
 from app.whatsWA.ChatRepository import chatRepository  # 根据你的实际路径调整导入
 
 
-@app.task(
+@celery_app.task(
     name="process_whatsapp_message",
     bind=True,
     max_retries=3,
