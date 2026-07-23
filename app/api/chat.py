@@ -3,7 +3,7 @@
 """
 from fastapi import APIRouter,Request
 from fastapi.responses import JSONResponse
-from tasks import process_whatsapp_message
+from app.api.tasks import process_whatsapp_message
 from dotenv import load_dotenv
 import os
 
