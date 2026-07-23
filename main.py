@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import chat
+from app.api import UserManagement,Rag,chat
 from common.logger import setup_logging
 # 初始化日志配置
 setup_logging()
 
 app = FastAPI(
     title="OpenWA",
-    description="OpenWA钩子，WhatsApp用户询盘，后端直接回复响应",
+    description="OpenWA钩子，WhatsApp用户询盘",
     version="0.1.0"
 
 )
@@ -21,7 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(chat.router, prefix="/api", tags=["会话"])
+
+app.include_router(chat.router, prefix="", tags=["接收用户的消息"])
+app.include_router(UserManagement.router, prefix="/v1", tags=["用户权限"])
+app.include_router(Rag.router, prefix="/v1", tags=["Rag文档库"])
+
 
 
 if __name__ == "__main__":

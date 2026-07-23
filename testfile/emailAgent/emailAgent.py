@@ -231,6 +231,7 @@ class EmailAgent:
         #newquery={"messages":[{"role":"user","content":"你还记得我吗"}]}
         for event in app.stream(query ,config,stream_mode=["values"]):
             #print(mode)
+            print(f"打印输出：")
             print(event)
 
         # r1 = app.invoke(query, config)
