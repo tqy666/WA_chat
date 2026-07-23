@@ -22,3 +22,5 @@ app.conf.update(
     task_track_started=True,
     worker_prefetch_multiplier=1,  # 关键：防止任务堆积
 )
+
+import app.api.tasks  # 注册 Celery 任务
