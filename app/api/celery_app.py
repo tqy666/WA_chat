@@ -23,3 +23,6 @@ celery_app.conf.update(
     worker_prefetch_multiplier=1,  # 关键：防止任务堆积
 )
 
+# 确保 worker 启动时加载任务模块，否则会报 unregistered task
+celery_app.conf.include = ["app.api.tasks"]
+
