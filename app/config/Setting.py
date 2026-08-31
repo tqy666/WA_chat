@@ -26,8 +26,8 @@ def get_llm():
     try:
         import pymysql
         conn = pymysql.connect(
-            host="127.0.0.1", port=3306, user="root",
-            password="root", database="openwa", charset="utf8mb4"
+            host=os.getenv("MYSQL_HOST"), port=3306, user=os.getenv("MYSQL_USER"),
+            password=os.getenv("MYSQL_PASSWORD"), database="openwa", charset="utf8mb4"
         )
         cursor = conn.cursor()
         cursor.execute("SELECT model_name, model_api_key FROM model LIMIT 1")

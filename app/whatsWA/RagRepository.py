@@ -38,7 +38,7 @@ SYSTEM_PROMPT = (
 class RagServerTool:
     def __init__(self):
         self.collection_name = "openwa_webhook"
-        self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
+        self.embeddings = OllamaEmbeddings(model="nomic-embed-text",base_url="http://ollama:11434")
         self.persist_dir = Path(__file__).resolve().parent.parent / "chroma_dir"
         self.vector_db = Chroma(
             persist_directory=str(self.persist_dir),

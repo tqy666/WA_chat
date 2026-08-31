@@ -32,7 +32,7 @@ class WaAgentAgentState(TypedDict):
 
 class ChatRepository:
     def __init__(self):
-        self.classifier_llm = get_llm().with_structured_output(WaClassification)
+        self.classifier_llm = get_llm()
 
     def read_message(self, state: WaAgentAgentState):
         """1. WhatsApp消息的起点"""
@@ -41,12 +41,17 @@ class ChatRepository:
     def classify_intent(self, state: WaAgentAgentState) -> Command[
         Literal["search_documentation", "send_message"]]:
         """2. LLM意图识别分类，决定走向知识库还是其他处理"""
-        classification = self.classifier_llm.invoke(f"""
+        response = self.classifier_llm.invoke(f"""
                    分析用户的消息并分类,请严格按照 JSON 格式输出结果:
                    消息: {state['send_content']}
                    发件人: {state['send_from']}
                    提供 intent（question/bug/billing/feature/complex/human_agent）, urgency。
                """)
+        import json
+        import re
+        # 从回复中提取 JSON
+        json_match = re.search(r'\{.*\}', response.content, re.DOTALL)
+        classification = json.loads(json_match.group()) if json_match else {"intent": "chit_chat", "urgency": "low"}
         print(f"意图识别：{classification}")
         if classification["intent"] in ["question", "feature"]:
             goto = "search_documentation"
@@ -104,8 +109,8 @@ class ChatRepository:
     async def send_message(self, state: WaAgentAgentState):
         """4. 发送消息"""
         print(f"回复内容: {state['send_from']}-----{state['draft_response']}")
-        # message_result = await SendMessageRepository.send_message(state["chatId"], state["draft_response"], state["sessionId"])
-        # print(f"发送给WhatsApp消息:{message_result}")
+        message_result = await SendMessageRepository.send_message(state["chatId"], state["draft_response"], state["sessionId"])
+        print(f"发送给WhatsApp消息:{message_result}")
 
     async def chat_stream(self, thread_id, query):
         wb_db = Path(__file__).resolve().parent.parent / "WhatsAppDB/wa_app.db"

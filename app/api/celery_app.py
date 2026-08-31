@@ -26,3 +26,7 @@ celery_app.conf.update(
 # 确保 worker 启动时加载任务模块，否则会报 unregistered task
 celery_app.conf.include = ["app.api.tasks"]
 
+
+# 显式导入任务模块，确保任务被注册（不依赖 include 机制）
+from app.api import tasks  # noqa: F401
+

@@ -12,7 +12,7 @@ class SendMessageRepository:
         if not api_key:
             return {"statusCode": 500, "message": "Missing API Key"}
 
-        url = f"https://restcos.online/api/sessions/{sessionId}/messages/send-text"
+        url = f"{os.getenv("OPENWA_API_HOST")}/api/sessions/{sessionId}/messages/send-text"
 
         headers = {
             "Content-Type": "application/json",

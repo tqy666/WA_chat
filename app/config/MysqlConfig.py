@@ -6,13 +6,19 @@ from pymysql.cursors import DictCursor
 from fastapi import   HTTPException
 import bcrypt
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+
+
+load_dotenv()
 
 # ================= 1. 数据库配置 =================
 DB_CONFIG = {
-    "host": "localhost",  # 你的数据库地址
+    "host": os.getenv("MYSQL_HOST"),  # 你的数据库地址
     "port": 3306,  # 端口
-    "user": "root",  # 数据库用户名
-    "password": "root",  # 数据库密码
+    "user": os.getenv("MYSQL_USER"),  # 数据库用户名
+    "password":os.getenv("MYSQL_PASSWORD"),  # 数据库密码
     "database": "openwa",  # 你在 Navicat 中看到的数据库名
     "charset": "utf8mb4"
 }

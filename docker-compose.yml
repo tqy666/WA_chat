@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  wa-webhook:
+    build: .
+    container_name: wa-webhook
+    restart: always
+    # 暴露端口给宿主机（可选，方便直接调试）
+    ports:
+      - "8000:8000"
+    networks:
+      - my-net
+
+  wa-webhook-ui:
+    build: /home/WA_chat_ui
+    container_name: wa-webhook-ui
+    restart: always
+    networks:
+      - my-net
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: always
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - my-net
+    ports:
+      - "11434:11434"
+    environment:
+      OLLAMA_HOST: "0.0.0.0"
+
+  wa-webhook-worker:
+    build: .
+    container_name: wa-webhook-worker
+    restart: always
+    env_file:
+      - .env
+    command: uv run celery -A app.api.celery_app worker --loglevel=info --concurrency=1
+    depends_on:
+      - wa-webhook
+    networks:
+      - my-net 
+         
+
+networks:
+  my-net:
+    name: my-net   # 强制指定网络名称，方便 Nginx 加入
+    external: true # 如果网络不存在，第一次运行会报错，看下面说明
+
+volumes:
+  ollama_data:      

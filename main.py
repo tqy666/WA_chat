@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 
-app.include_router(chat.router, prefix="", tags=["接收用户的消息"])
+app.include_router(chat.router, prefix="/v1", tags=["接收用户的消息"])
 app.include_router(UserManagement.router, prefix="/v1", tags=["用户权限"])
 app.include_router(Rag.router, prefix="/v1", tags=["Rag文档库"])
 
